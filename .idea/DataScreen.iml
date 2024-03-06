@@ -8,5 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="qweather-icons" level="application" />
+    <orderEntry type="library" name="main" level="application" />
   </component>
 </module>
