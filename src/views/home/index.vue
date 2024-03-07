@@ -3,12 +3,13 @@
     <!--    left-->
     <div class="page-left-view">
       <div class="zhtx-view">
-        <title-frame title="知识预警总览">
+        <title-frame title="产销情况总览">
           <div class="flex-around">
-            <city-image-block type="tech" title="预警学生" value="45" unit="个"/>
-            <city-image-block type="tech" title="题目预警" value="17" unit="个"/>
+            <city-image-block type="tray" title="产品总数量" value="45" unit="个"/>
+            <city-image-block type="tray" title="今日销售数量" value="17" unit="个"/>
+            <city-image-block type="tray" title="预测销售数量" value="17" unit="个"/>
           </div>
-          <left-pie-chart style="height: calc(100% - 80px)"/>
+          <left-bar-chart  style="width:100%;height:100px" />
         </title-frame>
       </div>
       <div class="cstz-view">
@@ -104,6 +105,20 @@ export default {
         {name: '逻辑错误', value: 31},
         {name: '语法错误', value: 31},
       ],
+      targetConfig: {
+        data: [
+          {
+            name: '销售目标',
+            value: 80
+          },
+          {
+            name: '生产目标',
+            value: 67
+          },
+        ],
+        colors: ['#ffb800', '#007d9d'],
+        unit: '%'
+      }
     }
   },
   computed: {

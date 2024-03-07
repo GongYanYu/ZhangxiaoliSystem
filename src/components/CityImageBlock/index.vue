@@ -42,7 +42,7 @@ export default {
         case 'leaves':
           return 28
         case 'tray':
-          return 50
+          return 28
         case 'disc':
           return 39
         default:
@@ -56,7 +56,7 @@ export default {
         case 'tech':
           return 14
         case 'tray':
-          return 22
+          return 14
         case 'disc':
           return 20
         default:
@@ -81,7 +81,7 @@ export default {
 <style lang='scss' scoped>
 
 .city-image-block-main {
-  height: 140px;
+  height: 70px;
   width: 49%;
   margin: 8px 4px;
   position: relative;
@@ -104,7 +104,7 @@ export default {
 
   .title {
     width: 100%;
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
     color: #fff;
   }
@@ -242,12 +242,11 @@ export default {
   img {
     position: absolute;
     left: 0;
-    top: 0;
-    bottom: 40px;
-    height: 80%;
+    top: 8px;
+    bottom: 30px;
+    height: 70%;
     width: 100%;
     object-fit: contain;
-
   }
 }
 

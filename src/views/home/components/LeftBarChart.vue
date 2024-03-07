@@ -35,73 +35,44 @@ export default {
   },
   methods: {
     renderChart() {
+      const max=100
+      const dataList = [
+        {name:'销售目标',value:'75'},
+        {name:'生产目标',value:'87'},
+      ]
 
-      var data = [{
-        "name": "简单",
-        "value": 4
-      }, {
-        "name": "中等",
-        "value": 6
-      }, {
-        "name": "困难",
-        "value": 7
-      },];
-      var xData = [],
-          yData = [];
-      var min = 50;
-      data.map(function(a, b) {
-        xData.push(a.name);
-        if (a.value === 0) {
-          yData.push(a.value + min);
-        } else {
-          yData.push(a.value);
-        }
-      });
       const option = {
-        color: ['#3398DB'],
-        // tooltip: {
-        //   trigger: 'axis',
-        //   axisPointer: {
-        //     type: 'line',
-        //     lineStyle: {
-        //       opacity: 0
-        //     }
-        //   },
-        // },
-        legend: {
-          data: ['直接访问', '背景'],
-          show: false
-        },
         grid: {
           left: '5%',
           right: '5%',
           bottom: '5%',
-          top: '7%',
-          height: '85%',
-          containLabel: true,
-          z: 22
+          top: '10%',
+          containLabel: true
         },
-        xAxis: [{
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'none'
+          },
+          formatter: function(params) {
+            return params[0].name + '<br/>' +
+                "<span style='display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:rgba(36,207,233,0.9)'></span>" +
+                params[0].seriesName + ' : ' + Number((params[0].value.toFixed(4) / 10000).toFixed(2)).toLocaleString() + ' 万元<br/>'
+          }
+        },
+        xAxis: {
+          show: false,
+          type: 'value'
+        },
+        yAxis: [{
           type: 'category',
-          gridIndex: 0,
-          data: xData,
-          axisTick: {
-            alignWithLabel: true
-          },
-          axisLine: {
-            lineStyle: {
-              color: '#0c3b71'
-            }
-          },
+          inverse: true,
           axisLabel: {
             show: true,
-            color: 'rgb(170,170,170)',
-            fontSize:16
-          }
-        }],
-        yAxis: [{
-          type: 'value',
-          gridIndex: 0,
+            textStyle: {
+              color: '#fff'
+            },
+          },
           splitLine: {
             show: false
           },
@@ -109,87 +80,60 @@ export default {
             show: false
           },
           axisLine: {
-            lineStyle: {
-              color: '#0c3b71'
-            }
+            show: false
           },
+          data: dataList.map(e=> e.name)
+        }, {
+          type: 'category',
+          inverse: true,
+          axisTick: 'none',
+          axisLine: 'none',
+          show: true,
           axisLabel: {
-            color: 'rgb(170,170,170)',
-            formatter: '{value} '
-          }
-        },
-          {
-            type: 'value',
-            gridIndex: 0,
-            splitNumber: 12,
-            splitLine: {
-              show: false
+            textStyle: {
+              color: '#ffffff',
+              fontSize: '12'
             },
-            axisLine: {
-              show: false
+            formatter: function(value) {
+              return value + '%';
             },
-            axisTick: {
-              show: false
-            },
-            axisLabel: {
-              show: false
-            },
-            splitArea: {
-              show: true,
-              areaStyle: {
-                color: ['rgba(250,250,250,0.0)', 'rgba(250,250,250,0.05)']
-              }
-            }
-          }
-        ],
+          },
+          data:dataList.map(e=>e.value)
+        }],
         series: [{
+          name: '金额',
           type: 'bar',
-          barWidth: '30%',
-          xAxisIndex: 0,
-          yAxisIndex: 0,
+          zlevel: 1,
           itemStyle: {
             normal: {
               barBorderRadius: 30,
-              color: new echarts.graphic.LinearGradient(
-                  0, 0, 0, 1, [{
-                    offset: 0,
-                    color: '#00feff'
-                  },
-                    {
-                      offset: 0.5,
-                      color: '#027eff'
-                    },
-                    {
-                      offset: 1,
-                      color: '#0286ff'
-                    }
-                  ]
-              )
-            }
+              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                offset: 0,
+                color: 'rgb(57,89,255,1)'
+              }, {
+                offset: 1,
+                color: 'rgb(46,200,207,1)'
+              }]),
+            },
           },
-          data: yData,
-          zlevel: 11
-
+          barWidth: 20,
+          data:dataList.map(e=>e.value)
         },
           {
+            name: '背景',
             type: 'bar',
-            barWidth: '50%',
-            xAxisIndex: 0,
-            yAxisIndex: 1,
-            barGap: '-135%',
-            data: [100, 100, 100, 100, 100, 100, 100],
+            barWidth: 20,
+            barGap: '-100%',
+            data:dataList.map(e=>max),
             itemStyle: {
               normal: {
-                color: 'rgba(255,255,255,0.1)'
+                color: 'rgba(24,31,68,1)',
+                barBorderRadius: 30,
               }
             },
-            zlevel: 9
           },
-
         ]
       };
-
-
 
       this.chart.setOption(option)
     },

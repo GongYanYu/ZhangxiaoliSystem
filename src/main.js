@@ -17,6 +17,10 @@ import '@/styles/index.scss'
 import clipboard from "clipboard";
 Vue.prototype.clipboard = clipboard;
 
+import * as echarts from 'echarts'
+Vue.prototype.echarts=echarts
+import "echarts/map/js/china.js";
+
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)
 

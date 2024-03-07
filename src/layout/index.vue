@@ -6,9 +6,9 @@
 
     <div class="loading-view"></div>
     <div class="top-view">
-      <img src="@/assets/layout/top-back.png" class="top-back-img" alt=""/>
+<!--      <img src="@/assets/layout/top-back.png" class="top-back-img" alt=""/>-->
       <div class="top-weather"></div>
-      <div class="top-title">XX模型XX系统</div>
+      <div class="top-title">屠宰链配额管理大屏</div>
       <div class="top-time-setting">
         <div class="time">
           <div class="top">{{ currentTime | formatDate('hh:mm:ss') }}</div>
@@ -23,35 +23,6 @@
       <router-view/>
     </div>
 
-
-    <div class="left-word">
-      问题ID：
-      <el-select v-model="questionId" placeholder="请选择" size="mini" style="width: 70px">
-        <el-option
-            v-for="item in questionList"
-            :key="item.id"
-            :label="item.id"
-            :value="item.id">
-        </el-option>
-      </el-select>
-    </div>
-    <div class="right-word">
-      <div class="flex-around">
-        学生ID：
-        <el-select v-model="studentId" placeholder="请选择" size="mini" style="width: 120px">
-          <el-option
-              v-for="item in studentList"
-              :key="item.id"
-              :label="item.id"
-              :value="item.id">
-          </el-option>
-        </el-select>
-      </div>
-      <custom-button style="margin-top: 8px" @click.native="isDialogShow=!isDialogShow"
-      >进入知识空间</custom-button>
-    </div>
-
-    <student-dialog v-model="isDialogShow"/>
   </div>
 </template>
 <script>
@@ -128,6 +99,14 @@ export default {
     }
   }
 
+  @mixin get-color($color) {
+    background-image:
+        radial-gradient($color, transparentize($color, .75) 2px, transparent 40px),
+        radial-gradient($color, transparentize($color, .65) 1px, transparent 30px),
+        radial-gradient($color, transparentize($color, .5) 2px, transparent 40px),
+        radial-gradient(transparentize($color, .6), transparentize($color, .9) 2px, transparent 30px);
+  }
+
   .loading-view {
     position: absolute;
     top: 0;
@@ -136,30 +115,10 @@ export default {
     bottom: 0;
     z-index: -1;
 
-    color: white;
-    background-color: #000E28;
-  }
-
-  .loading-view::after {
-    position: fixed;
-    top: 0;
-    left: 0;
-    content: '';
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(0deg,
-        #9FF7EA 0px,
-        #9FF7EA 1px,
-        transparent 1px,
-        transparent 100px),
-    linear-gradient(90deg,
-            #9FF7EA 0px,
-            #9FF7EA 1px,
-            transparent 1px,
-            transparent 100px);
-    background-size: 50px 50px;
-    opacity: 0.1;
-    z-index: -1;
+    background-color: black;
+    @include get-color(#007d9d);
+    background-size: 550px 550px, 350px 350px, 250px 250px, 150px 150px;
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px;
   }
 
 
@@ -169,7 +128,7 @@ export default {
     left: 0;
     width: 100%;
     height: 100px;
-    background: linear-gradient(to bottom, #012d52e3 45%, #01233f00);
+    background: linear-gradient(to bottom, #003846 45%, #01233f00);
     display: flex;
     align-items: center;
     z-index: 2000;

@@ -6,9 +6,6 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import * as echarts from 'echarts'
-import {AMapUI} from 'amap-ui'
 
 //https://www.makeapie.cn/echarts_content/xByJm_ypsl.html
 export default {
@@ -24,7 +21,7 @@ export default {
   computed:{
   },
   mounted() {
-    this.chart = echarts.init(this.$refs.chart)
+    this.chart = this.echarts.init(this.$refs.chart)
     this.renderChart()
   },
   data() {
@@ -38,489 +35,361 @@ export default {
   },
   methods: {
     renderChart() {
-      const echarts = this.$echarts
+      const echarts = this.echarts
 
       const myChart=this.chart
 
-      //https://www.makeapie.cn/echarts_content/x0-uCepnPl.html
-      /**
-       *    地图3.0版本 ，修改时间轴控件和事件，封装geoJson获取事件
-       *    显示南海诸岛    下钻的标题样式修改
-       *    设置geoIndex 和  visualMap 里面的seriesIndex  就可以让地图和点同时存在
-       *    这个时候地图颜色的配置就在 geo里面配置了而不是  series里面
-       *    借鉴了一些社区大佬的作品
-       *
-       *   github上有完整的vue代码，感兴趣的可以去看看,觉得有用的可以点个star
-       *   地址：https://github.com/biubiubiu01/EchartsMap
-       *
-       *   预览地址：https://gist006.gitee.io/echartsmap/#/
-       *
-       *   高德点击下钻的简易版本可以去看我的另一个：
-       *    https://gallery.echartsjs.com/editor.html?c=xz3jGj90ns
-       *
-       *    vue-antd-admin后台管理系统，有兴趣可以看看:
-       *    https://github.com/biubiubiu01/vue-antd-admin
-       *
-       *   全国所有市县Geojson下载地址：
-       *   http://datav.aliyun.com/tools/atlas/#&lat=31.840232667909365&lng=104.2822265625&zoom=4
-       *
-       *   想显示南海诸岛的话可以将  map属性设置为'china'
-       *
-       *   欢迎大家提供改进建议和反馈bug
-       *
-       */
+      // 秋雁南飞：
+// 此版本通过设置geoindex && seriesIndex: [1] 属性来实现geo和map共存，来达到hover散点和区域显示tooltip的效果
+// 默认情况下，map series 会自己生成内部专用的 geo 组件。但是也可以用这个 geoIndex 指定一个 geo 组件。这样的话，map 和 其他 series（例如散点图）就可以共享一个 geo 组件了。并且，geo 组件的颜色也可以被这个 map series 控制，从而用 visualMap 来更改。
+// 当设定了 geoIndex 后，series-map.map 属性，以及 series-map.itemStyle 等样式配置不再起作用，而是采用 geo 中的相应属性。
+// http://echarts.baidu.com/option.html#series-map.geoIndex
+// 并且加了pin气泡图标以示数值大小
+// // 全局变量区:参考江西绿色金融（谢谢：本来想用闭包实现接口数据调用，没时间了）
 
+// 本图作者：参考秋雁南飞的《投票统计》一图，网址：http://gallery.echartsjs.com/editor.html?c=xrJU-aE-LG
+      var name_title = ""
+      var subname = ''
+      var nameColor = " rgb(55, 75, 113)"
+      var name_fontFamily = '等线'
+      var subname_fontSize = 15
+      var name_fontSize = 18
+      var mapName = 'china'
+      var data = [
+        {name:"北京",value:177},
+        {name:"天津",value:42},
+        {name:"河北",value:102},
+        {name:"山西",value:81},
+        {name:"内蒙古",value:47},
+        {name:"辽宁",value:67},
+        {name:"吉林",value:82},
+        {name:"黑龙江",value:66},
+        {name:"上海",value:24},
+        {name:"江苏",value:92},
+        {name:"浙江",value:114},
+        {name:"安徽",value:109},
+        {name:"福建",value:116},
+        {name:"江西",value:91},
+        {name:"山东",value:119},
+        {name:"河南",value:137},
+        {name:"湖北",value:116},
+        {name:"湖南",value:114},
+        {name:"重庆",value:91},
+        {name:"四川",value:125},
+        {name:"贵州",value:62},
+        {name:"云南",value:83},
+        {name:"西藏",value:9},
+        {name:"陕西",value:80},
+        {name:"甘肃",value:56},
+        {name:"青海",value:10},
+        {name:"宁夏",value:18},
+        {name:"新疆",value:67},
+        {name:"广东",value:123},
+        {name:"广西",value:59},
+        {name:"海南",value:14},
+      ];
 
+      var geoCoordMap = {};
+      var toolTipData = [
+        {name:"北京",value:[{name:"文科",value:95},{name:"理科",value:82}]},
+        {name:"天津",value:[{name:"文科",value:22},{name:"理科",value:20}]},
+        {name:"河北",value:[{name:"文科",value:60},{name:"理科",value:42}]},
+        {name:"山西",value:[{name:"文科",value:40},{name:"理科",value:41}]},
+        {name:"内蒙古",value:[{name:"文科",value:23},{name:"理科",value:24}]},
+        {name:"辽宁",value:[{name:"文科",value:39},{name:"理科",value:28}]},
+        {name:"吉林",value:[{name:"文科",value:41},{name:"理科",value:41}]},
+        {name:"黑龙江",value:[{name:"文科",value:35},{name:"理科",value:31}]},
+        {name:"上海",value:[{name:"文科",value:12},{name:"理科",value:12}]},
+        {name:"江苏",value:[{name:"文科",value:47},{name:"理科",value:45}]},
+        {name:"浙江",value:[{name:"文科",value:57},{name:"理科",value:57}]},
+        {name:"安徽",value:[{name:"文科",value:57},{name:"理科",value:52}]},
+        {name:"福建",value:[{name:"文科",value:59},{name:"理科",value:57}]},
+        {name:"江西",value:[{name:"文科",value:49},{name:"理科",value:42}]},
+        {name:"山东",value:[{name:"文科",value:67},{name:"理科",value:52}]},
+        {name:"河南",value:[{name:"文科",value:69},{name:"理科",value:68}]},
+        {name:"湖北",value:[{name:"文科",value:60},{name:"理科",value:56}]},
+        {name:"湖南",value:[{name:"文科",value:62},{name:"理科",value:52}]},
+        {name:"重庆",value:[{name:"文科",value:47},{name:"理科",value:44}]},
+        {name:"四川",value:[{name:"文科",value:65},{name:"理科",value:60}]},
+        {name:"贵州",value:[{name:"文科",value:32},{name:"理科",value:30}]},
+        {name:"云南",value:[{name:"文科",value:42},{name:"理科",value:41}]},
+        {name:"西藏",value:[{name:"文科",value:5},{name:"理科",value:4}]},
+        {name:"陕西",value:[{name:"文科",value:38},{name:"理科",value:42}]},
+        {name:"甘肃",value:[{name:"文科",value:28},{name:"理科",value:28}]},
+        {name:"青海",value:[{name:"文科",value:5},{name:"理科",value:5}]},
+        {name:"宁夏",value:[{name:"文科",value:10},{name:"理科",value:8}]},
+        {name:"新疆",value:[{name:"文科",value:36},{name:"理科",value:31}]},
+        {name:"广东",value:[{name:"文科",value:63},{name:"理科",value:60}]},
+        {name:"广西",value:[{name:"文科",value:29},{name:"理科",value:30}]},
+        {name:"海南",value:[{name:"文科",value:8},{name:"理科",value:6}]},
+      ];
 
+      /*获取地图数据*/
+      myChart.showLoading();
+      var mapFeatures = echarts.getMap(mapName).geoJson.features;
+      myChart.hideLoading();
+      mapFeatures.forEach(function(v) {
+        // 地区名称
+        var name = v.properties.name;
+        // 地区经纬度
+        geoCoordMap[name] = v.properties.cp;
 
+      });
 
-      var geoJson = {}
+// console.log("============geoCoordMap===================")
+// console.log(geoCoordMap)
+// console.log("================data======================")
+//       console.log(data)
+//       console.log(toolTipData)
+      var max = 480,
+          min = 9; // todo
+      var maxSize4Pin = 100,
+          minSize4Pin = 20;
 
-      var parentInfo = [{
-        cityName: '全国',
-        code: 100000
-      }]
-
-      var currentIndex = 0
-
-      var timeTitle = ['2015', '2016', '2017', '2018', '2019']
-      init(100000)
-
-      function init(adcode){
-        getGeoJson(adcode).then(data => {
-          geoJson = data
-          getMapData()
-        })
-      }
-
-
-//这里我封装了下，直接可以拿过来用
-      function getGeoJson(adcode, childAdcode = '') {
-        return new Promise((resolve, reject) => {
-          function insideFun(adcode, childAdcode) {
-            AMapUI.loadUI(['geo/DistrictExplorer'], DistrictExplorer => {
-              var districtExplorer = new DistrictExplorer();
-              districtExplorer.loadAreaNode(adcode, function(error, areaNode) {
-                if (error) {
-                  console.error(error);
-                  reject(error);
-                  return;
-                }
-                let Json = areaNode.getSubFeatures();
-                if (Json.length === 0) {
-                  let parent = areaNode._data.geoData.parent.properties.acroutes;
-                  insideFun(parent[parent.length - 1], adcode);
-                  return;
-                }
-
-                if (childAdcode) {
-                  Json = Json.filter(item => {
-                    return item.properties.adcode == childAdcode;
-                  });
-                }
-                let mapJson = {
-                  features: Json
-                };
-                resolve(mapJson);
-              });
+      var convertData = function(data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+          var geoCoord = geoCoordMap[data[i].name];
+          if (geoCoord) {
+            res.push({
+              name: data[i].name,
+              value: geoCoord.concat(data[i].value),
             });
           }
-          insideFun(adcode, childAdcode);
-        });
-      }
-
-//获取数据
-      function getMapData() {
-        let mapData = [],
-            pointData = [],
-            sum = 0
-
-        geoJson.features.forEach(item => {
-          let value = Math.random() * 3000
-          mapData.push({
-            name: item.properties.name,
-            value: value,
-            cityCode: item.properties.adcode
-          })
-          pointData.push({
-            name: item.properties.name,
-            value: [item.properties.center[0], item.properties.center[1], value],
-            cityCode: item.properties.adcode
-          })
-          sum += value
-        })
-        mapData = mapData.sort(function(a, b) {
-          return b.value - a.value
-        });
-
-        initEchartMap(mapData, sum, pointData)
-      }
-
-
-//渲染echarts
-      function initEchartMap(mapData, sum, pointData) {
-        var xData = [],
-            yData = []
-        var min = mapData[mapData.length - 1].value
-        var max = mapData[0].value
-        if (mapData.length === 1) {
-          min = 0
         }
-        mapData.forEach(c => {
-          xData.unshift(c.name)
-          yData.unshift(c.value)
-        })
-        //这里做个切换，全国的时候才显示南海诸岛  只有当注册的名字为china的时候才会显示南海诸岛
-        echarts.registerMap(parentInfo.length === 1 ? 'china' : 'map', geoJson);
-        var option = {
-          timeline: {
-            data: timeTitle,
-            axisType: 'category',
-            autoPlay: true,
-            playInterval: 5000,
-            left: '10%',
-            right: '10%',
-            bottom: '2%',
-            width: '80%',
+        return res;
+      };
+      const option = {
+        title: {
+          text: name_title,
+          subtext: subname,
+          x: 'center',
+          textStyle: {
+            color: nameColor,
+            fontFamily: name_fontFamily,
+            fontSize: name_fontSize
+          },
+          subtextStyle:{
+            fontSize:subname_fontSize,
+            fontFamily:name_fontFamily
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: function(params) {
+            if (typeof(params.value)[2] == "undefined") {
+              var toolTiphtml = ''
+              for(var i = 0;i<toolTipData.length;i++){
+                if(params.name==toolTipData[i].name){
+                  toolTiphtml += toolTipData[i].name+':<br>'
+                  for(var j = 0;j<toolTipData[i].value.length;j++){
+                    toolTiphtml+=toolTipData[i].value[j].name+':'+toolTipData[i].value[j].value+"<br>"
+                  }
+                }
+              }
+              // console.log(toolTiphtml)
+              // console.log(convertData(data))
+              return toolTiphtml;
+            } else {
+              var toolTiphtml = ''
+              for(var i = 0;i<toolTipData.length;i++){
+                if(params.name==toolTipData[i].name){
+                  toolTiphtml += toolTipData[i].name+':<br>'
+                  for(var j = 0;j<toolTipData[i].value.length;j++){
+                    toolTiphtml+=toolTipData[i].value[j].name+':'+toolTipData[i].value[j].value+"<br>"
+                  }
+                }
+              }
+              // console.log(toolTiphtml)
+              // console.log(convertData(data))
+              return toolTiphtml;
+            }
+          }
+        },
+        visualMap: {
+          show: true,
+          min: 0,
+          max: 200,
+          left: 'left',
+          top: 'bottom',
+          text: ['高', '低'], // 文本，默认为数值文本
+          calculable: true,
+          seriesIndex: [1],
+          inRange: {
+            // color: ['#3B5077', '#031525'] // 蓝黑
+            // color: ['#ffc0cb', '#800080'] // 红紫
+            // color: ['#3C3B3F', '#605C3C'] // 黑绿
+            // color: ['#0f0c29', '#302b63', '#24243e'] // 黑紫黑
+            // color: ['#23074d', '#cc5333'] // 紫红
+            color: ['#00467F', '#A5CC82'] // 蓝绿
+            // color: ['#1488CC', '#2B32B2'] // 浅蓝
+            // color: ['#00467F', '#A5CC82'] // 蓝绿
+            // color: ['#00467F', '#A5CC82'] // 蓝绿
+            // color: ['#00467F', '#A5CC82'] // 蓝绿
+            // color: ['#00467F', '#A5CC82'] // 蓝绿
+
+          }
+        },
+        geo: {
+          show: true,
+          map: mapName,
+          label: {
+            normal: {
+              show: false
+            },
+            emphasis: {
+              show: false,
+            }
+          },
+          roam: true,
+          itemStyle: {
+            normal: {
+              borderColor: 'rgba(147, 235, 248, 1)',
+              borderWidth: 1,
+              areaColor: {
+                type: 'radial',
+                x: 0.5,
+                y: 0.5,
+                r: 0.8,
+                colorStops: [{
+                  offset: 0,
+                  color: 'rgba(147, 235, 248, 0)' // 0% 处的颜色
+                }, {
+                  offset: 1,
+                  color: 'rgba(147, 235, 248, .2)' // 100% 处的颜色
+                }],
+                globalCoord: false // 缺省为 false
+              },
+              shadowColor: 'rgba(128, 217, 248, 1)',
+              // shadowColor: 'rgba(255, 255, 255, 1)',
+              shadowOffsetX: -2,
+              shadowOffsetY: 2,
+              shadowBlur: 10
+            },
+            emphasis: {
+              areaColor: '#389BB7',
+              borderWidth: 0
+            }
+          }
+        },
+        series: [{
+          name: '散点',
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          data: convertData(data),
+          symbolSize: function(val) {
+            return val[2] / 10;
+          },
+          label: {
+            normal: {
+              formatter: '{b}',
+              position: 'right',
+              show: true
+            },
+            emphasis: {
+              show: true
+            }
+          },
+          itemStyle: {
+            normal: {
+              color: '#05C3F9'
+            }
+          }
+        },
+          {
+            type: 'map',
+            map: mapName,
+            geoIndex: 0,
+            aspectScale: 0.75, //长宽比
+            showLegendSymbol: false, // 存在legend时显示
             label: {
               normal: {
-                textStyle: {
-                  color: 'rgb(179, 239, 255)'
-                }
+                show: true
               },
               emphasis: {
+                show: false,
                 textStyle: {
                   color: '#fff'
                 }
               }
             },
-            currentIndex: currentIndex,
-            symbolSize: 10,
-            lineStyle: {
-              color: '#8df4f4'
-            },
-            checkpointStyle: {
-              borderColor: '#8df4f4',
-              color: '#53D9FF',
-              borderWidth: 2,
-            },
-            controlStyle: {
-              showNextBtn: true,
-              showPrevBtn: true,
+            roam: true,
+            itemStyle: {
               normal: {
-                color: '#53D9FF',
-                borderColor: '#53D9FF'
+                areaColor: '#031525',
+                borderColor: '#3B5077',
               },
               emphasis: {
-                color: 'rgb(58,115,192)',
-                borderColor: 'rgb(58,115,192)'
+                areaColor: '#2B91B7'
               }
             },
-
+            animation: false,
+            data: data
           },
-          baseOption: {
-            backgroundColor: '#012248',
-            title: [{
-              left: 'center',
-              top: 10,
-              text: parentInfo[parentInfo.length - 1].cityName + '销售额统计图(可点击下钻到县)',
-              textStyle: {
-                color: 'rgb(179, 239, 255)',
-                fontSize: 16
-              },
+          {
+            name: '点',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            symbol: 'pin', //气泡
+            symbolSize: function(val) {
+              var a = (maxSize4Pin - minSize4Pin) / (max - min);
+              var b = minSize4Pin - a * min;
+              b = maxSize4Pin - a * max;
+              return a * val[2] + b;
             },
-              {
-                text: "销售总额：" + sum.toFixed(2) + '万',
-                left: 'center',
-                top: '6.5%',
-                textStyle: {
-                  color: '#FFAC50',
-                  fontSize: 26
-                }
-              }
-            ],
-            tooltip: {
-              trigger: 'axis',
-              axisPointer: {
-                type: 'shadow'
-              },
-            },
-            grid: {
-              right: '2%',
-              top: '12%',
-              bottom: '8%',
-              width: '20%'
-            },
-            toolbox: {
-              feature: {
-                restore: {
-                  show: false
-                },
-                dataView: {
-                  show: false
-                },
-                saveAsImage: {
-                  name: parentInfo[parentInfo.length - 1].cityName + '销售额统计图'
-                },
-                dataZoom: {
-                  show: false
-                },
-                magicType: {
-                  show: false
-                }
-              },
-              iconStyle: {
-                normal: {
-                  borderColor: '#1990DA'
-                }
-              },
-              top: 15,
-              right: 35
-            },
-            geo: {
-              map: parentInfo.length === 1 ? 'china' : 'map',
-              zoom: 1.1,
-              roam: true,
-              left:'10%',
-              top:'15%',
-              tooltip: {
-                trigger: 'item',
-                formatter: (p) => {
-                  let val = p.value[2];
-                  if (window.isNaN(val)) {
-                    val = 0;
-                  }
-                  let txtCon =
-                      "<div style='text-align:left'>" + p.name + ":<br />销售额：" + val.toFixed(2) + '万</div>';
-                  return txtCon;
-                }
-              },
-              label: {
-                normal: {
-                  show: true,
-                  color: "rgb(249, 249, 249)", //省份标签字体颜色
-                  formatter: p => {
-                    switch (p.name) {
-                      case '内蒙古自治区':
-                        p.name = "内蒙古"
-                        break;
-                      case '西藏自治区':
-                        p.name = "西藏"
-                        break;
-                      case '新疆维吾尔自治区':
-                        p.name = "新疆"
-                        break;
-                      case '宁夏回族自治区':
-                        p.name = "宁夏"
-                        break;
-                      case '广西壮族自治区':
-                        p.name = "广西"
-                        break;
-                      case '香港特别行政区':
-                        p.name = "香港"
-                        break;
-                      case '澳门特别行政区':
-                        p.name = "澳门"
-                        break;
-
-                    }
-                    return p.name;
-                  }
-                },
-                emphasis: {
-                  show: true,
-                  color: '#f75a00',
-                }
-              },
-              itemStyle: {
-                normal: {
-                  areaColor: '#24CFF4',
-                  borderColor: '#53D9FF',
-                  borderWidth: 1.3,
-                  shadowBlur: 15,
-                  shadowColor: 'rgb(58,115,192)',
-                  shadowOffsetX: 7,
-                  shadowOffsetY: 6,
-                },
-                emphasis: {
-                  areaColor: '#8dd7fc',
-                  borderWidth: 1.6,
-                  shadowBlur: 25,
-                }
-
-              },
-            },
-            visualMap: {
-              min: min,
-              max: max,
-              left: '3%',
-              bottom: '5%',
-              calculable: true,
-              seriesIndex: [0],
-              inRange: {
-                color: ['#24CFF4', '#2E98CA', '#1E62AC']
-              },
-              textStyle: {
-                color: '#24CFF4'
-              }
-            },
-            xAxis: {
-              type: 'value',
-              scale: true,
-              position: 'top',
-              boundaryGap: false,
-              splitLine: {
-                show: false
-              },
-              axisLine: {
+            label: {
+              normal: {
                 show: true,
-                lineStyle: {
-                  color: '#455B77'
-                }
-              },
-              axisTick: {
-                show: false
-              },
-              axisLabel: {
-                margin: 2,
                 textStyle: {
-                  color: '#c0e6f9'
+                  color: '#fff',
+                  fontSize: 9,
                 }
-              },
-            },
-            yAxis: {
-              type: 'category',
-              nameGap: 16,
-              axisLine: {
-                show: true,
-                lineStyle: {
-                  color: '#455B77'
-                }
-              },
-              axisTick: {
-                show: false,
-              },
-              axisLabel: {
-                interval: 0,
-                textStyle: {
-                  color: '#c0e6f9'
-                }
-              },
-              data: xData
-            },
-            series: [{
-              name: timeTitle[currentIndex] + '年销售额度',
-              type: 'map',
-              geoIndex: 0,
-              map: parentInfo.length === 1 ? 'china' : 'map',
-              roam: true,
-              zoom: 1.3,
-              tooltip: {
-                trigger: "item",
-                formatter: p => {
-                  let val = p.value;
-                  if (p.name == '南海诸岛') return
-                  if (window.isNaN(val)) {
-                    val = 0;
-                  }
-                  let txtCon =
-                      "<div style='text-align:left'>" + p.name + ":<br />销售额：" + val.toFixed(2) + '万</div>';
-                  return txtCon;
-                }
-              },
-              label: {
-                normal: {
-                  show: false,
-                },
-                emphasis: {
-                  show: false,
-                }
-              },
-              data: mapData,
-
-            },
-              {
-                name: '散点',
-                type: 'effectScatter',
-                coordinateSystem: 'geo',
-                rippleEffect: {
-                  brushType: 'fill'
-                },
-                itemStyle: {
-                  normal: {
-                    color: '#F4E925',
-                    shadowBlur: 10,
-                    shadowColor: '#333'
-                  }
-                },
-                data: pointData,
-
-                symbolSize: function(val) {
-                  let value = val[2]
-                  if (value == max) {
-                    return 27
-                  }
-                  return 10
-                },
-                showEffectOn: 'render', //加载完毕显示特效
-              },
-              {
-                type: 'bar',
-                barGap: '-100%',
-                barCategoryGap: '60%',
-                itemStyle: {
-                  normal: {
-                    color: '#11AAFE'
-                  },
-                  emphasis: {
-                    show: false
-                  }
-                },
-                data: yData
               }
-
-            ]
-
+            },
+            itemStyle: {
+              normal: {
+                color: '#F62157', //标志颜色
+              }
+            },
+            zlevel: 6,
+            data: convertData(data),
+          },
+          {
+            name: 'Top 5',
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
+            data: convertData(data.sort(function(a, b) {
+              return b.value - a.value;
+            }).slice(0, 5)),
+            symbolSize: function(val) {
+              return val[2] / 10;
+            },
+            showEffectOn: 'render',
+            rippleEffect: {
+              brushType: 'stroke'
+            },
+            hoverAnimation: true,
+            label: {
+              normal: {
+                formatter: '{b}',
+                position: 'right',
+                show: true
+              }
+            },
+            itemStyle: {
+              normal: {
+                color: 'yellow',
+                shadowBlur: 10,
+                shadowColor: 'yellow'
+              }
+            },
+            zlevel: 1
           },
 
+        ]
+      };
 
-        }
-
-
-        myChart.setOption(option, true)
-
-
-        //点击前解绑，防止点击事件触发多次
-        myChart.off('click');
-        myChart.on('click', echartsMapClick);
-
-        //监听时间切换事件
-        myChart.off('timelinechanged');
-        myChart.on('timelinechanged', params => {
-
-          currentIndex = params.currentIndex;
-          getMapData();
-        });
-      }
-
-//echarts点击事件
-      function echartsMapClick(params) {
-
-        if (!params.data) {
-          return
-        } else {
-          //如果当前是最后一级，那就直接return
-          if (parentInfo[parentInfo.length - 1].code == params.data.cityCode) {
-            return
-          }
-          let data = params.data
-          parentInfo.push({
-            cityName: data.name,
-            code: data.cityCode
-          })
-          init(data.cityCode)
-        }
-      }
+      myChart.setOption(option);
 
     },
 

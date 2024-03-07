@@ -1,29 +1,31 @@
 <template>
-  <div class="title-frame-view-2">
-    <div class="frame-title-view" :class="mode">
-      <div class="title">{{ title }}</div>
-      <div class="decorate"></div>
-      <div class="action">
-        <slot name="action"></slot>
+  <dv-border-box-6>
+    <div class="title-frame-view-2">
+      <div class="frame-title-view" :class="mode">
+        <div class="title">{{ title }}</div>
+<!--        <div class="decorate"></div>-->
+        <div class="action">
+          <slot name="action"></slot>
+        </div>
       </div>
-    </div>
-    <div class="frame-content-view">
-      <div class="frame-content-inner">
-        <slot></slot>
+      <div class="frame-content-view">
+        <div class="frame-content-inner">
+          <slot></slot>
+        </div>
       </div>
+<!--      <div class="frame-cube"></div>-->
+<!--      <div class="frame-ltt-line"></div>-->
+<!--      <div class="frame-lbb-line"></div>-->
+<!--      <div class="frame-ltl-line">-->
+<!--        <div class="l1"></div>-->
+<!--        <div class="l2"></div>-->
+<!--        <div class="l3"></div>-->
+<!--        <div class="l4"></div>-->
+<!--      </div>-->
+<!--      <div class="frame-rtt-line"></div>-->
+<!--      <div class="frame-rtr-line"></div>-->
     </div>
-    <div class="frame-cube"></div>
-    <div class="frame-ltt-line"></div>
-    <div class="frame-lbb-line"></div>
-    <div class="frame-ltl-line">
-      <div class="l1"></div>
-      <div class="l2"></div>
-      <div class="l3"></div>
-      <div class="l4"></div>
-    </div>
-    <div class="frame-rtt-line"></div>
-    <div class="frame-rtr-line"></div>
-  </div>
+  </dv-border-box-6>
 </template>
 
 <script>
@@ -57,14 +59,14 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  border-right: 2px solid #05539E;
-  border-bottom: 2px solid #05549e8e;
   overflow: visible;
+
+
 
   .frame-title-view {
     height: 35px;
     width: 100%;
-    background: linear-gradient(to right, #0875ceb9 20%, #ffffff00 80%);
+    background: linear-gradient(to right, #007d9d 20%, #ffffff00 80%);
     border-top: 2px solid #186fe236;
 
     display: flex;
@@ -75,11 +77,11 @@ export default {
 
     .title {
       padding-left: 15px;
-      font-size: 24px;
+      font-size: 18px;
       color: #ffffff;
-      font-family: YouSheBiaoTiHei;
       line-height: 35px;
       z-index: 50;
+      font-weight: bold;
     }
 
     .decorate {
