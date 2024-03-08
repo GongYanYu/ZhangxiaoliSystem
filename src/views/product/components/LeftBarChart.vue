@@ -35,18 +35,16 @@ export default {
   },
   methods: {
     renderChart() {
-      const max=100,barWidth=10
+      const max=100,barWidth='20'
       const dataList = [
-        {name:'销售目标',value:'75'},
-        {name:'生产目标',value:'87'},
+        {name:'生产目标',value:'75'},
       ]
 
       const option = {
         grid: {
-          left: '5%',
+          // top: '0%',
+          left: '1%',
           right: '5%',
-          bottom: '5%',
-          top: '10%',
           containLabel: true
         },
         tooltip: {
@@ -54,11 +52,6 @@ export default {
           axisPointer: {
             type: 'none'
           },
-          formatter: function(params) {
-            return params[0].name + '<br/>' +
-                "<span style='display:inline-block;margin-right:5px;border-radius:10px;width:9px;height:9px;background-color:rgba(36,207,233,0.9)'></span>" +
-                params[0].seriesName + ' : ' + Number((params[0].value.toFixed(4) / 10000).toFixed(2)).toLocaleString() + ' 万元<br/>'
-          }
         },
         xAxis: {
           show: false,
@@ -70,7 +63,8 @@ export default {
           axisLabel: {
             show: true,
             textStyle: {
-              color: '#fff'
+              color: '#fff',
+              fontSize: '14'
             },
           },
           splitLine: {
@@ -92,7 +86,7 @@ export default {
           axisLabel: {
             textStyle: {
               color: '#ffffff',
-              fontSize: '12'
+              fontSize: '14'
             },
             formatter: function(value) {
               return value + '%';
@@ -145,8 +139,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
-  height: 100%;
+.container {
+  height: 30px;
   width: 100%;
+  margin-top: 10px;
+  &> div {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

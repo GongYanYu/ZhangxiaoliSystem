@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import {buildConfig} from '@/settings'
 import Layout from '@/layout'
-import {SceneNameAssemble} from '@/utils/services/overlay/overlay.model'
 
 Vue.use(VueRouter)
 
@@ -19,10 +18,17 @@ const routes = [
                 pageNav: true,
                 needLogin: true,
                 name: "大屏首页",
-                viewName: SceneNameAssemble.default
-            }
-        },
-        ]
+            },
+        }, {
+            path: '/product',
+            component: () => import('@/views/product/index'),
+            name: 'product',
+            meta: {
+                pageNav: true,
+                needLogin: true,
+                name: "产销监测",
+            },
+        },]
     },
 ]
 

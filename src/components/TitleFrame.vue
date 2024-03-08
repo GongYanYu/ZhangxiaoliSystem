@@ -1,5 +1,5 @@
 <template>
-  <dv-border-box-6>
+  <dv-border-box-6  :color="['#007d9d', 'green']" >
     <div class="title-frame-view-2">
       <div class="frame-title-view" :class="mode">
         <div class="title">{{ title }}</div>
@@ -55,8 +55,8 @@ export default {
 <style lang="scss" scoped>
 .title-frame-view-2 {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 5px;
+  left:5px;
   width: 100%;
   height: 100%;
   overflow: visible;
@@ -67,12 +67,9 @@ export default {
     height: 35px;
     width: 100%;
     background: linear-gradient(to right, #007d9d 20%, #ffffff00 80%);
-    border-top: 2px solid #186fe236;
-
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
     position: relative;
 
     .title {
@@ -117,7 +114,7 @@ export default {
       height: 100%;
       background: #00000013;
       background: linear-gradient(310deg, transparent 10px, #00000013 0);
-      box-shadow: 0px 0px 0px 0.5px #146dbb;
+    //  box-shadow: 0px 0px 0px 0.5px #146dbb;
       position: relative;
       overflow: hidden;
     }

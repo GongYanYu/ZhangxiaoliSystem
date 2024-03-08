@@ -3,13 +3,13 @@
     <!--    left-->
     <div class="page-left-view">
       <div class="zhtx-view">
-        <title-frame title="产销情况总览">
+        <title-frame title="生产情况总览">
+          <left-bar-chart/>
           <div class="flex-around">
             <city-image-block type="tray" title="产品总数量" value="45" unit="个"/>
             <city-image-block type="tray" title="今日销售数量" value="17" unit="个"/>
             <city-image-block type="tray" title="预测销售数量" value="17" unit="个"/>
           </div>
-          <left-bar-chart  style="width:100%;height:100px" />
         </title-frame>
       </div>
       <div class="cstz-view">
@@ -78,13 +78,13 @@ import HorizontalTab from "@/components/HorizontalTab.vue";
 import PieChart from "@/components/Chart/PieChart/index.vue";
 import BarChart from "@/components/Chart/BarChart/index.vue";
 import CityImageBlock from "@/components/CityImageBlock/index.vue";
-import LeftPieChart from "@/views/home/components/LeftPieChart.vue";
-import LeftBarChart from "@/views/home/components/LeftBarChart.vue";
+import LeftPieChart from "@/views/product/components/LeftPieChart.vue";
+import LeftBarChart from "@/views/product/components/LeftBarChart.vue";
 import NotifySetting from "@/components/NotifySetting/index.vue";
 import HotWordChart from "@/components/HotWordChart/index.vue";
-import LeftBarChart2 from "@/views/home/components/LeftBarChart2.vue";
-import LeftBarChart3 from "@/views/home/components/LeftBarChart3.vue";
-import LeftLineChart from "@/views/home/components/LeftLineChart.vue";
+import LeftBarChart2 from "@/views/product/components/LeftBarChart2.vue";
+import LeftBarChart3 from "@/views/product/components/LeftBarChart3.vue";
+import LeftLineChart from "@/views/product/components/LeftLineChart.vue";
 
 export default {
   components: {
