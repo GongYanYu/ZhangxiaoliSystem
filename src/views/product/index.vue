@@ -28,7 +28,7 @@
     <!--    right-->
     <div class="page-right-view">
       <div class="zhtx-view">
-        <title-frame title="生产情况总览">
+        <title-frame title="销售情况总览">
           <left-bar-chart  :data="{name: '销售目标', value: 82 }"/>
           <div class="flex-around">
             <city-image-block type="leaves" title="活动累计销售" value="405.1" unit="万元"/>
@@ -45,7 +45,7 @@
         </title-frame>
       </div>
       <div class="gcjg-view">
-        <title-frame title="产品种类生产排行">
+        <title-frame title="产品种类销售排行">
           <dv-scroll-ranking-board :config="rightList" class="left-list" />
         </title-frame>
       </div>
