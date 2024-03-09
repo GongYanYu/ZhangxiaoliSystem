@@ -23,6 +23,7 @@
       <router-view/>
     </div>
 
+    <tab-view/>
   </div>
 </template>
 <script>
@@ -30,9 +31,11 @@ import {mapGetters} from 'vuex'
 import RelationshipChart from "@/components/RelationshipChart/index.vue";
 import CustomButton from "@/components/custom-button.vue";
 import StudentDialog from "@/layout/components/StudentDialog.vue";
+import TabView from "@/components/TabView";
 
 export default {
   components: {
+    TabView,
     StudentDialog,
     CustomButton,
     RelationshipChart

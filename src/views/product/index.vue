@@ -4,57 +4,49 @@
     <div class="page-left-view">
       <div class="zhtx-view">
         <title-frame title="生产情况总览">
-          <left-bar-chart/>
+          <left-bar-chart  :data="{name: '生产目标', value: 75 }"/>
           <div class="flex-around">
-            <city-image-block type="tray" title="产品总数量" value="45" unit="个"/>
-            <city-image-block type="tray" title="今日销售数量" value="17" unit="个"/>
-            <city-image-block type="tray" title="预测销售数量" value="17" unit="个"/>
+            <city-image-block type="leaves" title="累计销售数量" value="45" unit="元"/>
+            <city-image-block type="leaves" title="目标销售数量" value="17" unit="元"/>
+            <city-image-block type="leaves" title="次日预测销售数量" value="17" unit="元"/>
           </div>
         </title-frame>
       </div>
       <div class="cstz-view">
-        <title-frame title="区域销量排行">
-          <left-bar-chart2/>
+        <title-frame title="产品种类生产占比">
+          <div class="chart-inner-4">
+            <normal-pie-chart class="cell" v-for="item in pieList" :data="item"/>
+          </div>
         </title-frame>
       </div>
       <div class="gcjg-view">
-        <title-frame title="产品种类销量占比">
-          <left-bar-chart3/>
+        <title-frame title="产品种类生产排行">
+          <dv-scroll-ranking-board :config="leftList" class="left-list" />
         </title-frame>
       </div>
     </div>
     <!--    right-->
     <div class="page-right-view">
-      <div class="djyl-view">
-        <title-frame title="异常情况总览">
+      <div class="zhtx-view">
+        <title-frame title="生产情况总览">
+          <left-bar-chart  :data="{name: '销售目标', value: 82 }"/>
           <div class="flex-around">
-            <city-image-block type="tech" title="红色预警" value="246" unit="条"/>
-            <city-image-block type="tech" title="橙色预警" value="50" unit="条"/>
+            <city-image-block type="leaves" title="活动累计销售" value="405.1" unit="万元"/>
+            <city-image-block type="leaves" title="活动累计销售" value="170.1" unit="万元"/>
+            <city-image-block type="leaves" title="活动累计销售" value="107.1" unit="万元"/>
           </div>
         </title-frame>
       </div>
-      <div class="stzl-view">
-        <title-frame title="异常情况明细" style="padding-right: 8px;">
-          <div class="flex-around">
-            <city-image-block type="disc" title="异常级别" value="1" unit="级"/>
-            <city-image-block type="disc" title="产品类别" value="" unit="中温"/>
-            <city-image-block type="disc" title="产品名称" value="" unit="白条"/>
-          </div>
-          <div class="flex-around">
-            <city-image-block type="tech" title="异常价格" value="12" unit="个"/>
-            <city-image-block type="tech" title="异常上涨" value="28" unit="个"/>
-            <city-image-block type="tech" title="异常下跌" value="10" unit="个"/>
+      <div class="cstz-view">
+        <title-frame title="产品种类销售占比">
+          <div class="chart-inner-4">
+            <normal-pie-chart class="cell" v-for="item in rightPieList" :data="item"/>
           </div>
         </title-frame>
       </div>
-      <div class="jjfz-view">
-        <title-frame title="产品种类异常占比">
-          <left-pie-chart />
-        </title-frame>
-      </div>
-      <div class="jjfz-view">
-        <title-frame title="市场价格">
-          <left-line-chart />
+      <div class="gcjg-view">
+        <title-frame title="产品种类生产排行">
+          <dv-scroll-ranking-board :config="rightList" class="left-list" />
         </title-frame>
       </div>
     </div>
@@ -85,9 +77,11 @@ import HotWordChart from "@/components/HotWordChart/index.vue";
 import LeftBarChart2 from "@/views/product/components/LeftBarChart2.vue";
 import LeftBarChart3 from "@/views/product/components/LeftBarChart3.vue";
 import LeftLineChart from "@/views/product/components/LeftLineChart.vue";
+import NormalPieChart from "@/components/NormalPieChart";
 
 export default {
   components: {
+    NormalPieChart,
     LeftLineChart,
     LeftBarChart3,
     LeftBarChart2,
@@ -114,12 +108,11 @@ export default {
 
   data() {
     return {
-      hotWordData: [
-        {name: '作答超时', value: 31},
-        {name: '编译错误', value: 31},
-        {name: '运行超时', value: 31},
-        {name: '逻辑错误', value: 31},
-        {name: '语法错误', value: 31},
+      pieList: [
+        {name: '中温', value: 31},
+        {name: '冻品', value: 31},
+        {name: '分割品', value: 31},
+        {name: '预冷', value: 31},
       ],
       targetConfig: {
         data: [
@@ -134,7 +127,35 @@ export default {
         ],
         colors: ['#ffb800', '#007d9d'],
         unit: '%'
-      }
+      },
+      leftList:{
+        data: [
+          {name: '周口', value: 55},
+          {name: '南阳', value: 120},
+          {name: '西峡', value: 78},
+          {name: '驻马店', value: 66},
+          {name: '新乡', value: 80},
+          {name: '信阳', value: 45},
+          {name: '漯河', value: 29}
+        ]
+      },
+      rightPieList: [
+        {name: '未定义', value: 31},
+        {name: '未定义', value: 31},
+        {name: '未定义', value: 31},
+        {name: '未定义', value: 31},
+      ],
+      rightList: {
+        data: [
+          {name: '周口', value: 55},
+          {name: '南阳', value: 120},
+          {name: '西峡', value: 78},
+          {name: '驻马店', value: 66},
+          {name: '新乡', value: 80},
+          {name: '信阳', value: 45},
+          {name: '漯河', value: 29}
+        ]
+      },
     }
   },
   computed: {
@@ -160,25 +181,24 @@ export default {
 
   display: flex;
   flex-direction: column;
+}
 
-  .zhtx-view {
-    height: 220px;
-    width: 100%;
-    position: relative;
-  }
+.chart-inner-4{
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  flex-wrap: wrap;
 
-  .cstz-view {
-    margin: 10px 0;
-    flex: 1;
-    width: 100%;
-    position: relative;
+  .cell{
+    height: 49%;
+    width: 49%;
   }
+}
 
-  .gcjg-view {
-    height: 275px;
-    width: 100%;
-    position: relative;
-  }
+.left-list{
+  width:97%;
+  height:100%;
+  padding: 8px;
 }
 
 .page-right-view {
@@ -191,41 +211,23 @@ export default {
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-
-  .djyl-view {
-    height: 120px;
-    width: 100%;
-    position: relative;
-  }
-
-  .stzl-view {
-    margin-top: 10px;
-    height: 230px;
-    width: 100%;
-    position: relative;
-  }
-
-  .shzl-view {
-    margin-top: 10px;
-    height: 170px;
-    width: 100%;
-    position: relative;
-  }
-
-  .jjfz-view {
-    margin-top: 10px;
-    flex: 1;
-    width: 100%;
-    position: relative;
-  }
-
-  .zdjk-view {
-    margin-top: 10px;
-    height: 170px;
-    width: 100%;
-    position: relative;
-  }
-
+}
+.zhtx-view {
+  height: 220px;
+  width: 100%;
+  position: relative;
 }
 
+.cstz-view {
+  margin: 10px 0;
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+.gcjg-view {
+  height: 275px;
+  width: 100%;
+  position: relative;
+}
 </style>

@@ -11,10 +11,13 @@ import * as echarts from 'echarts'
 export default {
   name: 'LeftBarChart',
   props: {
-    dataList: {
-      type: Array,
+    data: {
+      type: Object,
       default: () => {
-        return []
+        return {
+          name: "生产目标",
+          value: 75
+        }
       }
     }
   },
@@ -28,106 +31,255 @@ export default {
     return {
       chart: null,
       isDialogShow:false,
-      entity:{}
+      config:{
+        data:[{name: '生产目标', value: 75}]
+      }
     }
   },
   watch:{
   },
   methods: {
     renderChart() {
-      const max=100,barWidth='20'
-      const dataList = [
-        {name:'生产目标',value:'75'},
-      ]
+      const myChart =this.chart
 
+      var  category= [this.data];
+      var total = 100; // 数据总数
+      var  datas = [];
+      category.forEach(value => {
+        datas.push(value.value);
+      });
       const option = {
-        grid: {
-          // top: '0%',
-          left: '1%',
-          right: '5%',
-          containLabel: true
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'none'
-          },
-        },
         xAxis: {
-          show: false,
-          type: 'value'
-        },
-        yAxis: [{
-          type: 'category',
-          inverse: true,
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: '#fff',
-              fontSize: '14'
-            },
-          },
+          max: total,
           splitLine: {
-            show: false
-          },
-          axisTick: {
             show: false
           },
           axisLine: {
             show: false
           },
-          data: dataList.map(e=> e.name)
-        }, {
-          type: 'category',
-          inverse: true,
-          axisTick: 'none',
-          axisLine: 'none',
-          show: true,
           axisLabel: {
-            textStyle: {
-              color: '#ffffff',
-              fontSize: '14'
-            },
-            formatter: function(value) {
-              return value + '%';
-            },
+            show: false
           },
-          data:dataList.map(e=>e.value)
+          axisTick: {
+            show: false
+          }
+        },
+        grid: {
+          left: 80,
+          top: 20, // 设置条形图的边距
+          right: 80,
+          bottom: 20
+        },
+        yAxis: [{
+          type: "category",
+          inverse: false,
+          data: category,
+          axisLine: {
+            show: false
+          },
+          axisTick: {
+            show: false
+          },
+          axisLabel: {
+            show: false
+          }
         }],
         series: [{
-          name: '金额',
-          type: 'bar',
-          zlevel: 1,
+          // 内
+          type: "bar",
+          barWidth: 18,
+
+          legendHoverLink: false,
+          silent: true,
           itemStyle: {
             normal: {
-              barBorderRadius: 30,
-              color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
-                offset: 0,
-                color: 'rgb(57,89,255,1)'
-              }, {
-                offset: 1,
-                color: 'rgb(46,200,207,1)'
-              }]),
-            },
+              color: function(params) {
+                var color;
+                if(params.dataIndex==19){
+                  color = {
+                    type: "linear",
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0,
+                      color: "#EB5118" // 0% 处的颜色
+                    },
+                      {
+                        offset: 1,
+                        color: "#F21F02" // 100% 处的颜色
+                      }
+                    ]
+                  }
+                }else if(params.dataIndex==18){
+                  color = {
+                    type: "linear",
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0,
+                      color: "#FFA048" // 0% 处的颜色
+                    },
+                      {
+                        offset: 1,
+                        color: "#B25E14" // 100% 处的颜色
+                      }
+                    ]
+                  }
+                }else if(params.dataIndex==17){
+                  color = {
+                    type: "linear",
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0,
+                      color: "#F8E972" // 0% 处的颜色
+                    },
+                      {
+                        offset: 1,
+                        color: "#E5C206" // 100% 处的颜色
+                      }
+                    ]
+                  }
+                }else{
+                  color = {
+                    type: "linear",
+                    x: 0,
+                    y: 0,
+                    x2: 1,
+                    y2: 0,
+                    colorStops: [{
+                      offset: 0,
+                      color: "#1588D1" // 0% 处的颜色
+                    },
+                      {
+                        offset: 1,
+                        color: "#0F4071" // 100% 处的颜色
+                      }
+                    ]
+                  }
+                }
+                return color;
+              },
+            }
           },
-          barWidth,
-          data:dataList.map(e=>e.value)
+          label: {
+            normal: {
+              show: true,
+              position: "left",
+              formatter: "{b}",
+              textStyle: {
+                color: "#fff",
+                fontSize: 16,
+                fontWeight: '400'
+              }
+            }
+          },
+          data: category,
+          z: 1,
+          animationEasing: "elasticOut"
         },
           {
-            name: '背景',
-            type: 'bar',
-            barWidth,
-            barGap: '-100%',
-            data:dataList.map(e=>max),
+            // 分隔
+            type: "pictorialBar",
             itemStyle: {
-              normal: {
-                color: 'rgba(24,31,68,1)',
-                barBorderRadius: 30,
+              normal:{
+                color:"#061348"
               }
             },
+            symbolRepeat: "fixed",
+            symbolMargin: 6,
+            symbol: "rect",
+            symbolClip: true,
+            symbolSize: [1, 21],
+            symbolPosition: "start",
+            symbolOffset: [1, -1],
+            symbolBoundingData: this.total,
+            data: category,
+            z: 2,
+            animationEasing: "elasticOut"
           },
+          {
+            // 外边框
+            type: "pictorialBar",
+            symbol: "rect",
+            symbolBoundingData: total,
+            itemStyle: {
+              normal: {
+                color: "none"
+              }
+            },
+            label: {
+              normal: {
+                formatter: (params) => {
+                  var text;
+                  if(params.dataIndex==1){
+                    text = '{a|  100%}{f|  '+params.data+'}';
+                  }else if(params.dataIndex==2){
+                    text = '{b|  100%}{f|  '+params.data+'}';
+                  }else if(params.dataIndex==3){
+                    text = '{c|  100%}{f|  '+params.data+'}';
+                  }else{
+                    text = '{d|  100%}{f|  '+params.data+'}';
+                  }
+                  return ` {f|${params.data}%}`;
+                },
+                rich:{
+                  a: {
+                    color: 'red'
+                  },
+                  b: {
+                    color: 'blue'
+                  },
+                  c:{
+                    color: 'yellow'
+                  },
+                  d:{
+                    color:"green"
+                  },
+                  f:{
+                    color:"#ffffff",
+                    fontSize: 16
+                  }
+                },
+                position: 'right',
+                distance: 0, // 向右偏移位置
+                show: true
+              }
+            },
+            data: datas,
+            z: 0,
+            animationEasing: "elasticOut"
+          },
+          {
+            name: "外框",
+            type: "bar",
+            barGap: "-120%", // 设置外框粗细
+            data: [total, total, total,total,total,total,total,total,total,total,total,total,total,total,total,total,total,total,total,total],
+            barWidth: 25,
+            itemStyle: {
+              normal: {
+                color: "transparent", // 填充色
+                barBorderColor: "#1C4B8E", // 边框色
+                barBorderWidth: 1, // 边框宽度
+                // barBorderRadius: 0, //圆角半径
+                label: {
+                  // 标签显示位置
+                  show: false,
+                  position: "top" // insideTop 或者横向的 insideLeft
+                }
+              }
+            },
+            z: 0
+          }
         ]
       };
+
 
       this.chart.setOption(option)
     },
