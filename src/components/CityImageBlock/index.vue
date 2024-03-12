@@ -37,6 +37,8 @@ export default {
       switch (this.type) {
         case 'people':
           return 25
+        case 'contracted':
+          return 25
         case 'tech':
           return 20
         case 'leaves':

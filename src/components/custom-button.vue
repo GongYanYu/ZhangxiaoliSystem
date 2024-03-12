@@ -66,8 +66,11 @@ export default {
   box-shadow: inset 0 0 15px 0 #0091FF;
   border-radius: 2px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
   padding: 4px 8px;
+
+  //平行四边形
+  transform: skewX(-10deg);
 }
 
 .custom-button-main:hover{

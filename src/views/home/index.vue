@@ -35,6 +35,10 @@
       </div>
       <div class="stzl-view">
         <title-frame title="异常情况明细" style="padding-right: 8px;">
+          <template #action>
+            <custom-button type="info" @click.native="isPriceDialogShow=true">市场价格情况详情</custom-button>
+          </template>
+
           <div class="flex-around">
             <city-image-block type="disc" title="异常级别" value="1" unit="级"/>
             <city-image-block type="disc" title="产品类别" value="" unit="中温"/>
@@ -54,10 +58,13 @@
       </div>
       <div class="jjfz-view">
         <title-frame title="市场价格">
-          <left-line-chart />
+          <left-line-chart  @click.native="isAbnormalDialogShow=true"/>
         </title-frame>
       </div>
     </div>
+
+    <price-dialog v-model="isPriceDialogShow"/>
+    <abnormal-dialog v-model="isAbnormalDialogShow"/>
   </div>
 </template>
 
@@ -85,9 +92,17 @@ import HotWordChart from "@/components/HotWordChart/index.vue";
 import LeftBarChart2 from "@/views/home/components/LeftBarChart2.vue";
 import LeftBarChart3 from "@/views/home/components/LeftBarChart3.vue";
 import LeftLineChart from "@/views/home/components/LeftLineChart.vue";
+import PriceDialog from "@/views/home/components/PriceDialog";
+import MHorizontalTab from "@/components/MHorizontalTab";
+import CustomButton from "@/components/custom-button";
+import AbnormalDialog from "@/views/home/components/AbnormalDialog";
 
 export default {
   components: {
+    AbnormalDialog,
+    CustomButton,
+    MHorizontalTab,
+    PriceDialog,
     LeftLineChart,
     LeftBarChart3,
     LeftBarChart2,
@@ -134,7 +149,9 @@ export default {
         ],
         colors: ['#ffb800', '#007d9d'],
         unit: '%'
-      }
+      },
+      isPriceDialogShow:false,
+      isAbnormalDialogShow:false,
     }
   },
   computed: {
